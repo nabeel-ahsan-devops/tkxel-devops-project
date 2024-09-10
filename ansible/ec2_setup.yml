@@ -1,0 +1,11 @@
+- name: Install Docker and Docker Compose
+  become: true
+  apt:
+    name: ["docker.io", "docker-compose"]
+    update_cache: yes
+    state: latest
+
+- name: Start Docker service
+  service:
+    name: docker
+    state: started

@@ -1,43 +1,25 @@
-name: Terraform Deployment
+name: Terraform Provisioning
 
 on:
   push:
-    branches:
-      - main  # Runs on push to the main branch
-  pull_request:
-    branches:
-      - main  # Runs on pull request to the main branch
+    branches: [main]
 
 jobs:
-  terraform:
-    name: Apply Terraform
+  provision:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
+      - uses: actions/checkout@v3
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: actions/setup-terraform@v2
         with:
-          terraform_version: 1.5.0  # Specify the Terraform version
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Specify the AWS region
-
+          terraform_version: '1.x'
       - name: Initialize Terraform
         run: terraform init
-
-      - name: Format Terraform code
-        run: terraform fmt -check
-
-      - name: Terraform Plan
-        run: terraform plan
-
-      - name: Apply Terraform (Manual Approval)
-        if: github.ref == 'refs/heads/main'
+      - name: Apply Terraform configuration
         run: terraform apply -auto-approve
+        outputs:
+          subnet_id: ${{ steps.apply_terraform.outputs.subnet_id }}
+          security_group_id: ${{ steps.apply_terraform.outputs.security_group_id }}
+      - name: Use Subnet ID and Security Group ID
+        run: echo "Subnet ID: ${{ steps.apply_terraform.outputs.subnet_id }}"
+        echo "Security Group ID: ${{ steps.apply_terraform.outputs.security_group_id }}"

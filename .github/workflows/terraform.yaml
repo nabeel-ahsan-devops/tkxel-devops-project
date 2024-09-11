@@ -17,9 +17,10 @@ jobs:
         run: terraform init
       - name: Apply Terraform configuration
         run: terraform apply -auto-approve
-        outputs:
-          subnet_id: ${{ steps.apply_terraform.outputs.subnet_id }}
-          security_group_id: ${{ steps.apply_terraform.outputs.security_group_id }}
+        # outputs:
+        #   subnet_id: ${{ steps.apply_terraform.outputs.subnet_id }}
+        #   security_group_id: ${{ steps.apply_terraform.outputs.security_group_id }}
       - name: Use Subnet ID and Security Group ID
-        run: echo "Subnet ID: ${{ steps.apply_terraform.outputs.subnet_id }}"
-        echo "Security Group ID: ${{ steps.apply_terraform.outputs.security_group_id }}"
+        run: | 
+          echo "Subnet ID: ${{ steps.apply_terraform.outputs.subnet_id }}"
+          echo "Security Group ID: ${{ steps.apply_terraform.outputs.security_group_id }}"

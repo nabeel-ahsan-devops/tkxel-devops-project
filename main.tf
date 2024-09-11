@@ -32,12 +32,12 @@ resource "aws_security_group" "example" {
   }
 }
 resource "aws_instance" "example" {
-  instance_type = "t2.micro"  # Adjust the instance type as needed
-  ami           = "ami-0182f373e66f89c85"  # Replace with the desired AMI ID
+  instance_type = "t2.micro"
+  ami           = "ami-0182f373e66f89c85"
 
   network_interface {
-    subnet_id     = "subnet-062e27b70b10066f2"  # Replace with your subnet ID
-    security_groups = ["sg-05c8be0053e37e7db"]  # Replace with your security group ID
+    subnet_id     = aws_subnet.my_subnet.id
+    security_groups = [aws_security_group.my_security_group.id]
   }
 
   tags = {

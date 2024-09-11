@@ -21,5 +21,11 @@ jobs:
           subnet_id: ${{ steps.apply_terraform.outputs.subnet_id }}
           security_group_id: ${{ steps.apply_terraform.outputs.security_group_id }}
       - name: Use Subnet ID and Security Group ID
-        run: echo "Subnet ID: ${{ steps.apply_terraform.outputs.subnet_id }}"
-        echo "Security Group ID: ${{ steps.apply_terraform.outputs.security_group_id }}"
+        run: |
+          echo "Subnet ID: ${{ steps.apply_terraform.outputs.subnet_id }}"
+          echo "Security Group ID: ${{ steps.apply_terraform.outputs.security_group_id }}"
+      - name: Handle Terraform Errors (optional)
+        if: ${{ steps.apply_terraform.outputs.status != 'success' }}
+        run: |
+          echo "Terraform apply failed with status: ${{ steps.apply_terraform.outputs.status }}"
+          echo "Error message: ${{ steps.apply_terraform.outputs.stderr }}"
